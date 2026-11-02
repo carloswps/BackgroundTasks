@@ -1,6 +1,9 @@
+using BackgroundTasks.Api.Configurations;
 using BackgroundTasks.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();

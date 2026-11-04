@@ -1,5 +1,3 @@
-using System;
-
 namespace BackgroundTasks.Api.Configurations;
 
 public class RabbitMqSettings

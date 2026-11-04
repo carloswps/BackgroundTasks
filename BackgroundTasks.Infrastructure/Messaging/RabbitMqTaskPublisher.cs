@@ -1,11 +1,12 @@
 using System.Text;
 using System.Text.Json;
-using BackgroundTasks.Api.Configurations;
 using BackgroundTasks.Contracts.Messages;
+using BackgroundTasks.Infrastructure.Configurations;
+using BackgroundTasks.Infrastructure.Services;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
-namespace BackgroundTasks.Api.Services;
+namespace BackgroundTasks.Infrastructure.Messaging;
 
 public class RabbitMqTaskPublisher : ITaskPublisher
 {

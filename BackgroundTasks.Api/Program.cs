@@ -1,5 +1,7 @@
-using BackgroundTasks.Api.Configurations;
 using BackgroundTasks.Api.Services;
+using BackgroundTasks.Infrastructure.Configurations;
+using BackgroundTasks.Infrastructure.Messaging;
+using BackgroundTasks.Infrastructure.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

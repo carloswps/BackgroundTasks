@@ -1,6 +1,7 @@
 using System;
 using BackgroundTasks.Api.Models.Requests;
 using BackgroundTasks.Contracts.Messages;
+using BackgroundTasks.Infrastructure.Services;
 
 namespace BackgroundTasks.Api.Services;
 

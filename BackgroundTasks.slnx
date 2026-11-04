@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="BackgroundTasks.Api/BackgroundTasks.Api.csproj" />
   <Project Path="BackgroundTasks.Contracts/BackgroundTasks.Contracts.csproj" />
+  <Project Path="BackgroundTasks.Infrastructure/BackgroundTasks.Infrastructure.csproj" />
   <Project Path="BackgroundTasks.Worker/BackgroundTasks.Worker.csproj" />
 </Solution>

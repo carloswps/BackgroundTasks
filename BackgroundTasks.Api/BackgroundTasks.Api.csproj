@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BackgroundTasks.Contracts\BackgroundTasks.Contracts.csproj" />
+    <ProjectReference Include="..\BackgroundTasks.Infrastructure\BackgroundTasks.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

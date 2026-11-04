@@ -1,4 +1,4 @@
-namespace BackgroundTasks.Api.Configurations;
+namespace BackgroundTasks.Infrastructure.Configurations;
 
 public class RabbitMqSettings
 {

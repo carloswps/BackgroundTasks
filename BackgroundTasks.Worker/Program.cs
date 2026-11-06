@@ -1,7 +1,13 @@
+using BackgroundTasks.Infrastructure.Configurations;
 using BackgroundTasks.Worker;
+using BackgroundTasks.Worker.Consumers;
 
-var builder = Host.CreateApplicationBuilder(args);
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
+
 builder.Services.AddHostedService<Worker>();
+builder.Services.AddSingleton<ImportProductsConsumer>();
 
-var host = builder.Build();
+IHost host = builder.Build();
 host.Run();

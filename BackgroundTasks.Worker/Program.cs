@@ -7,7 +7,6 @@ HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
 
-/*
 builder.Services.AddHttpClient(
     "DummyJson",
     client =>
@@ -15,8 +14,8 @@ builder.Services.AddHttpClient(
         client.BaseAddress = new Uri("https://dummyjson.com/");
     }
 );
- */
 
+/*
 //Invalid code snippet.
 builder.Services.AddHttpClient(
     "DummyJson",
@@ -24,7 +23,7 @@ builder.Services.AddHttpClient(
     {
         client.BaseAddress = new Uri("https://dummyjson.invalid/");
     }
-);
+); */
 
 builder.Services.AddSingleton<IDummyJsonService, DummyJsonService>();
 

@@ -30,13 +30,7 @@ public class RabbitMqTaskPublisher : ITaskPublisher
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
 
-        await channel.QueueDeclareAsync(
-            "products.import",
-            durable: true,
-            exclusive: false,
-            autoDelete: false,
-            arguments: null
-        );
+        await RabbitMqTopology.ConfigureAsync(channel);
 
         var json = JsonSerializer.Serialize(message);
         var body = Encoding.UTF8.GetBytes(json);

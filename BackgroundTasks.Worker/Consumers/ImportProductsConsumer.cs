@@ -1,6 +1,7 @@
 using System.Text.Json;
 using BackgroundTasks.Contracts.Messages;
 using BackgroundTasks.Infrastructure.Configurations;
+using BackgroundTasks.Infrastructure.Messaging;
 using BackgroundTasks.Worker.Services;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
@@ -39,26 +40,27 @@ public class ImportProductsConsumer
         _connection ??= await factory.CreateConnectionAsync();
         _channel ??= await _connection.CreateChannelAsync();
 
-        await _channel.QueueDeclareAsync(
-            queue: "products.import",
-            durable: true,
-            exclusive: false,
-            autoDelete: false,
-            arguments: null
-        );
+        await RabbitMqTopology.ConfigureAsync(_channel);
 
         var consumer = new AsyncEventingBasicConsumer(_channel);
 
         consumer.ReceivedAsync += async (_, envetArgs) =>
         {
+            int rejectedCount = 0;
             try
             {
+                rejectedCount = RabbitMqRetryPolicy.GetRejectedCount(
+                    envetArgs.BasicProperties.Headers
+                );
+
                 ImportProductMessage? message = JsonSerializer.Deserialize<ImportProductMessage>(
                     envetArgs.Body.Span
                 );
 
                 if (message is null)
                     throw new Exception("Message is null or invalid.");
+
+                Console.WriteLine($"Rejected Count: {rejectedCount}");
 
                 Console.WriteLine($"TaskId: {message.TaskId}");
                 Console.WriteLine($"Limit: {message.Limit}");
@@ -80,11 +82,33 @@ public class ImportProductsConsumer
             catch (Exception ex)
             {
                 Console.WriteLine($"Error processing message: {ex.Message}");
-                await _channel.BasicNackAsync(
-                    envetArgs.DeliveryTag,
-                    multiple: false,
-                    requeue: true
-                );
+
+                if (rejectedCount < RabbitMqConstants.MaxRetries)
+                {
+                    Console.WriteLine(
+                        $"Forwarding to retry {rejectedCount + 1} of {RabbitMqConstants.MaxRetries}"
+                    );
+
+                    await _channel.BasicNackAsync(
+                        deliveryTag: envetArgs.DeliveryTag,
+                        multiple: false,
+                        requeue: false
+                    );
+                }
+                else
+                {
+                    Console.WriteLine(
+                        $"Max retries reached ({RabbitMqConstants.MaxRetries}). Forwarding to dead letter queue."
+                    );
+
+                    await _channel.BasicNackAsync(
+                        deliveryTag: envetArgs.DeliveryTag,
+                        multiple: false,
+                        requeue: false
+                    );
+
+                    await _channel.BasicAckAsync(envetArgs.DeliveryTag, multiple: false);
+                }
             }
         };
 

@@ -11,4 +11,6 @@ public static class RabbitMqConstants
     public const string DeadLetterQueue = "products.import.dlq";
 
     public const string DeadLetterExchange = "products.import.dlx";
+
+    public const int MaxRetries = 3;
 }
